@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+Orders | Shoppers
+{% endblock title %}
+
+{% block content %}
+    <div class="bg-light py-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 mb-0"><a href="{% url 'home' %}">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Orders</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-section">
+      <div class="container">
+        {% if messages %}
+            <div class="alert {% for message in messages %}{% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}{% endfor %} alert-dismissible alert-outline fade show" role="alert">
+                {% for message in messages %}
+                <strong {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="row mb-5">
+          <form class="col-md-12" method="post">
+            <div class="site-blocks-table">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th class="product-thumbnail">Order ID</th>
+                    <th class="product-name">Order Date</th>
+                    <th class="product-price">Order Amount</th>
+                    <th class="product-quantity">Address</th>
+                    <th class="product-total">State</th>
+                    <th class="product-remove">Status</th>
+                    <th class="product-action">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for order in orders %}
+                  <tr>
+                    <td><h2 class="h5 text-black">{{order.order_id}}</h2></td>
+                    <td>{{order.created_at|date:"d-m-Y"}}</td>
+                    <td>&#8377;{{order.amount}}</td>
+                    <td>{{order.address}}</td>
+                    <td>{{order.state}}</td>
+                    <td>{{order.status}}</td>
+                    {% if order.status == "Pending" %}
+                      <td>
+                        <a class="btn btn-primary btn-lg py-3 btn-block" href="/cancel-order/{{order.id}}/">
+                          cancel
+                        </a>
+                      </td>
+                    {% else %}
+                      <td>
+                        -
+                      </td>
+                    {% endif %}
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+{% endblock content %}

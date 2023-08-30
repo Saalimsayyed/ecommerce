@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ request.user.name }} - Profile | Shoppers
+{% endblock title %}
+
+{% block content %}
+    <div class="bg-light py-3">
+    <div class="container">
+        <div class="row">
+        <div class="col-md-12 mb-0">
+            <div class="col-md-12 mb-0"><a href="{% url 'home' %}">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Profile</strong></div>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="site-section">
+    <div class="container">
+        {% if messages %}
+            <div class="alert {% for message in messages %}{% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}{% endfor %} alert-dismissible alert-outline fade show" role="alert">
+                {% for message in messages %}
+                <strong {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="row">
+        <div class="col-md-6 mb-5 mb-md-0">
+            <h2 class="h3 mb-3 text-black">Profile Settings</h2>
+            <div class="p-3 p-lg-5 border">
+            <form method="POST" action="{% url 'profile' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group row">
+                <div class="col-md-12">
+                    <label class="text-black"
+                    >Name
+                    </label>
+                    <input
+                    required
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    name="name"
+                    value="{{request.user.name}}"
+                    />
+                </div>
+                </div>
+
+                <div class="form-group row">
+                <div class="col-md-12">
+                    <label class="text-black"
+                    >Email
+                    </label>
+                    <input
+                    required
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    disabled
+                    value="{{request.user.email}}"
+                    />
+                </div>
+                </div>
+
+                <div class="form-group row">
+                <div class="col-md-12">
+                    <label class="text-black"
+                    >Contact
+                    </label>
+                    <input
+                    required
+                    type="number"
+                    class="form-control"
+                    id="contact"
+                    name="contact"
+                    value="{{request.user.contact}}"
+                    />
+                </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <label class="text-black"
+                        >Image
+                        </label>
+                        <input
+                        type="file"
+                        class="form-control"
+                        id="image"
+                        name="image"
+                        />
+                    </div>
+                    </div>
+
+                <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-lg py-3 btn-block">
+                    Save
+                </button>
+                </div>
+            </form>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-5 mb-md-0">
+            <h2 class="h3 mb-3 text-black">Profile Image</h2>
+            <div class="p-3 p-lg-5 border">
+                <div class="block-4 text-center">
+                    <figure class="block-4-image">
+                        <img id="profile-image" style="height: 434px; width: 462px;" src="{% if request.user.image %} {{request.user.image.url}} {% else %} {% static 'assets/images/profile-icon-3901314404.png' %} {% endif %}" alt="{% static 'assets/images/profile-icon-3901314404.png' %}" class="img-fluid">
+                    </figure>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('image');
+        const img = document.getElementById('profile-image');
+      
+        fileInput.addEventListener('change', (event) => {
+          const file = event.target.files[0];
+          const reader = new FileReader();
+      
+          reader.onload = (e) => {
+            img.src = e.target.result;
+          };
+      
+          reader.readAsDataURL(file);
+        });
+      </script>
+
+{% endblock content %}

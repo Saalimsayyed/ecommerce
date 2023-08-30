@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Checkout | Shoppers
+{% endblock title %}
+
+{% block content %}
+    <div class="bg-light py-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 mb-0"><a href="index.html">Home</a> <span class="mx-2 mb-0">/</span> <a href="cart.html">Cart</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Checkout</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-section">
+      <div class="container">
+        <form method="POST" action="{% url 'checkout' %}">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-6 mb-5 mb-md-0">
+              <h2 class="h3 mb-3 text-black">Billing Details</h2>
+              <div class="p-3 p-lg-5 border">
+                <div class="form-group row">
+                  <div class="col-md-12">
+                    <label for="c_fname" class="text-black">Name <span class="text-danger">*</span></label>
+                    <input type="text" value="{{user.name}}" disabled class="form-control" id="c_fname" name="fname">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-md-12">
+                    <label for="c_address" class="text-black">Address <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="c_address" name="address" placeholder="Address">
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <div class="col-md-12">
+                    <label for="c_state_country" class="text-black">State <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="c_state_country" name="state">
+                  </div>
+                </div>
+
+                <div class="form-group row mb-5">
+                  <div class="col-md-6">
+                    <label for="c_email_address" class="text-black">Email Address <span class="text-danger">*</span></label>
+                    <input type="text" value="{{user.email}}" disabled class="form-control" id="c_email_address" name="c_email_address">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="c_phone" class="text-black">Phone <span class="text-danger">*</span></label>
+                    <input type="text" value="{{user.contact}}" disabled class="form-control" id="c_phone" name="c_phone" placeholder="Phone Number">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="c_order_notes" class="text-black">Order Notes</label>
+                  <textarea name="remarks" id="c_order_notes" cols="30" rows="5" class="form-control" placeholder="Write your notes here..."></textarea>
+                </div>
+
+              </div>
+            </div>
+            <div class="col-md-6">
+
+              <div class="row mb-5">
+                <div class="col-md-12">
+                  <h2 class="h3 mb-3 text-black">Coupon Code</h2>
+                  <div class="p-3 p-lg-5 border">
+                    
+                    <label for="c_code" class="text-black mb-3">Enter your coupon code if you have one</label>
+                    <div class="input-group w-75">
+                      <input disabled type="text" class="form-control" id="c_code" placeholder="Coupon Code" aria-label="Coupon Code" aria-describedby="button-addon2">
+                      <div class="input-group-append">
+                        <button disabled class="btn btn-primary btn-sm" type="button" id="button-addon2">Apply</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row mb-5">
+                <div class="col-md-12">
+                  <h2 class="h3 mb-3 text-black">Your Order</h2>
+                  <div class="p-3 p-lg-5 border">
+                    <table class="table site-block-order-table mb-5">
+                      <thead>
+                        <th>Product</th>
+                        <th>Total</th>
+                      </thead>
+                      <tbody>
+                        {% for item in items %}
+                          <tr>
+                            <td>{{item.product.name}} <strong class="mx-2">x</strong> {{item.quantity}}</td>
+                            <td>&#8377;{{item.price}}</td>
+                          </tr>
+                        {% endfor %}
+                        <tr>
+                          <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
+                          <td class="text-black font-weight-bold"><strong>&#8377;{{total}}</strong></td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-primary btn-lg py-3 btn-block">Place Order</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+<!--<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script type="text/javascript">
+  var status = "{{status}}";
+  if(status)
+  {
+    var options = {
+        key: '{{key_id}}',
+        amount: 50000, // amount in paisa
+        name: 'CarBook',
+        description: 'Car Rental',
+        image: "#",
+        handler: function(response) {
+            // handle the success response here
+        },
+        prefill: {
+            name: '{{first_name}} {{last_name}}',
+            email: '{{email}}}',
+            contact: '{{phone}}'
+        },
+        notes: {
+            address: 'Razorpay Corporate Office'
+        },
+        theme: {
+            color: '#F37254'
+        },
+        handler: function(response){
+                  window.location.href = "#";
+        },
+
+    };
+    var rzp = new Razorpay(options);
+    rzp.open();
+
+  }
+</script>
+<form id="verify-payment-form">
+  <input type="hidden" id="order_id" name="order_id" value="">
+  <input type="hidden" id="payment_id" name="payment_id" value="">
+  <input type="hidden" id="signature" name="signature" value="">
+</form>-->
+
+<script src="https://checkout.stripe.com/checkout.js"></script>
+<script>
+    var handler = StripeCheckout.configure({
+        key: '{{ key }}',
+        amount: '{{ amount }}',
+        name: 'FashionCart',
+        description: 'Payment Description',
+        image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+        locale: 'auto',
+        currency: 'INR',
+        trip: '{{ trip.id }}}',
+        token: function(token) {
+            // You can handle the token here or send it to your server for further processing
+            console.log(token);
+        }
+    });
+
+    handler.open();
+</script>
+
+
+{% endblock content %}
